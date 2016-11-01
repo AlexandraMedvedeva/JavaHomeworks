@@ -1,9 +1,6 @@
 package ru.spbstu.java_classes.homeworks.homework1;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.FileSystemException;
 
 /**
@@ -16,31 +13,27 @@ public class XorFileDecoder implements FileDecoder {
      * @param inputFilePath - input file path (relative to resources folder)
      * @return decoded file string
      */
-    public String decode(String inputFilePath){
-        FileInputStream fin = null;
+    public String decode(String inputFilePath) {
+        String result = null;
         try {
-            fin = new FileInputStream(inputFilePath);
-            InputStreamReader reader = new InputStreamReader(fin);
+            File inFile = new File(inputFilePath);
+            long inFileSize = inFile.length();
 
-            int data = 0;
-            int xorKey = 1;
-            String decodedData = new String();
-            while ((data = reader.read()) != -1) {
-                decodedData += data ^ xorKey;
+            DataInputStream inStream = new DataInputStream(new BufferedInputStream(new FileInputStream(inputFilePath)));
+
+            byte inData[] = new byte[(int) inFileSize];
+            inStream.readFully(inData);
+
+            result = new String(inData);
+
+            for (int i = 0; i < inFileSize; i++) {
+                result += (byte) (inData[i] ^ 1);
             }
-            return decodedData;
-        }catch(FileNotFoundException e){
+
+            return result;
+        } catch (IOException e) {
             e.printStackTrace();
-            return null;
-        }catch(IOException e){
-            e.printStackTrace();
-            return null;
-        }finally {
-          try{
-              fin.close();
-          }catch(IOException e){
-              e.printStackTrace();
-          }
         }
+        return result;
     }
 }

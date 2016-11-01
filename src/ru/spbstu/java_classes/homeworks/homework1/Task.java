@@ -6,8 +6,9 @@ public class Task {
 
     public static void main(String[] args) throws IOException {
         // 1) read input and ouput filenames (relative to resources folder e.g. input.txt output.txt)
-        String inputFilePath = "C:\\Users\\Alexandra\\Documents\\IdeaProjects\\05.09.16\\out\\production\\untitled104\\input.txt";
-        String outputFilePath = "C:\\Users\\Alexandra\\Documents\\IdeaProjects\\05.09.16\\out\\production\\untitled104\\output.txt";
+        //хоть файлы текстовые располагаются в папке resources, я не могу не писать абсолютный путь. Почему?
+        String inputFilePath = "C:\\Users\\Alexandra\\Documents\\IdeaProjects\\05.09.16\\resources\\input.txt";
+        String outputFilePath = "C:\\Users\\Alexandra\\Documents\\IdeaProjects\\05.09.16\\resources\\output.txt";
 
         // 2) Create XorFileEncoder implementing FileEncoder interface
         FileEncoder encoder = new XorFileEncoder();
