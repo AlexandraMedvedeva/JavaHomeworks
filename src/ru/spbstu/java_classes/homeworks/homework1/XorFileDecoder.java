@@ -14,26 +14,23 @@ public class XorFileDecoder implements FileDecoder {
      * @return decoded file string
      */
     public String decode(String inputFilePath) {
-        String result = null;
+        StringBuilder stringBuilder = null;
         try {
-            File inFile = new File(inputFilePath);
-            long inFileSize = inFile.length();
+            BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(inputFilePath));
 
-            DataInputStream inStream = new DataInputStream(new BufferedInputStream(new FileInputStream(inputFilePath)));
+            stringBuilder = new StringBuilder();
 
-            byte inData[] = new byte[(int) inFileSize];
-            inStream.readFully(inData);
-
-            result = new String(inData);
-
-            for (int i = 0; i < inFileSize; i++) {
-                result += (byte) (inData[i] ^ 1);
+            int value;
+            int prevValue = 0;
+            while((value = inStream.read()) != -1) {
+                stringBuilder.append((char) (value ^ prevValue));
+                prevValue = value;
             }
 
-            return result;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+
+        return stringBuilder.toString();
     }
 }

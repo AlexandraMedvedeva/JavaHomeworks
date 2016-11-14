@@ -14,28 +14,18 @@ public class XorFileEncoder implements FileEncoder {
      */
 
     public void endcode(String inputFilePath, String outputFilePath){
-        try{
-            File inFile = new File(inputFilePath);
-            long inFileSize = inFile.length();
+        try(BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(inputFilePath));
+            BufferedOutputStream outStream = new BufferedOutputStream(new FileOutputStream(outputFilePath))){
 
-            DataInputStream inStream = new DataInputStream(new BufferedInputStream(new FileInputStream(inputFilePath)));
-            DataOutputStream outStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(outputFilePath)));
+            int value;
+            int prevValue = 0;
 
-            /* вопрос: размер файла может быть очень большим, поэтому метод File->length() возвращает long
-             * однако массив типа byte в конструтор принемает аргумент только типа int (и Byte тоже, хоть он и динамический=>может выделить сколь угодно много памяти)
-             * почему?
-            */
-            byte inData[] = new byte[(int) inFileSize];
-            inStream.readFully(inData);
-
-            byte outData[] = new byte[(int)inFileSize];
-
-            for(int i = 0; i < inFileSize; i++){
-                outData[i] = (byte) (inData[i] ^ 1);
+            while((value = inStream.read()) != -1){
+                outStream.write(prevValue ^ value);
+                prevValue = value ^ prevValue;
             }
 
-            //почему-то не печатает в файл :(
-            outStream.write(outData);
+            outStream.close();
         }catch(IOException e){
             e.printStackTrace();
         }
